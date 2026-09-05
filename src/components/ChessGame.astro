@@ -1,0 +1,74 @@
+---
+// ChessGame.astro — embeds a replayable, annotated chess game using
+// @mliebelt/pgn-viewer (GPL-3.0). One board per instance; supports
+// multiple instances per page.
+//
+// Usage in an .mdx post:
+//   import ChessGame from '../../components/ChessGame.astro';
+//   <ChessGame pgn={`1. e4 e5 2. Nf3 Nc6 3. Bb5 a6`} orientation="white" />
+
+interface Props {
+  /** The game in PGN. Move comments in {curly braces} render as annotations. */
+  pgn: string;
+  /** Board orientation. Defaults to white. */
+  orientation?: 'white' | 'black';
+  /** Board width in CSS units (e.g. "400px"). Optional. */
+  boardSize?: string;
+  /** Optional caption shown under the board. */
+  caption?: string;
+}
+
+const { pgn, orientation = 'white', boardSize, caption } = Astro.props;
+
+// Unique id so several games can coexist on one page.
+const id = `pgnv-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<figure class="chess-game">
+  <div
+    id={id}
+    class="pgnv-board js-chess-game"
+    data-pgn={pgn}
+    data-orientation={orientation}
+    data-board-size={boardSize}
+  ></div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+{/* No define:vars here — that would make Astro treat the script as inline
+   and skip bundling, which drops the dynamic import(). This bare module
+   script gets bundled, so import() resolves and the library ships. It runs
+   once per page and initialises every board it finds. */}
+<script>
+  import { pgnView } from '@mliebelt/pgn-viewer';
+
+  document.querySelectorAll<HTMLElement>('.js-chess-game').forEach((el) => {
+    if (el.dataset.initialised) return;
+    el.dataset.initialised = 'true';
+
+    const boardSize = el.dataset.boardSize;
+    pgnView(el.id, {
+      pgn: el.dataset.pgn ?? '',
+      orientation: (el.dataset.orientation as 'white' | 'black') ?? 'white',
+      theme: 'blue',
+      layout: 'left',
+      pieceStyle: 'merida',
+      showResult: true,
+      notationLayout: 'list',
+      ...(boardSize ? { boardSize } : {}),
+    });
+  });
+</script>
+
+<style>
+  .chess-game {
+    margin: 2rem 0;
+  }
+  .chess-game figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: rgb(var(--gray, 96 115 159));
+    text-align: center;
+  }
+  /* pgn-viewer namespaces its own rules under .pgnvjs, so no collisions. */
+</style>

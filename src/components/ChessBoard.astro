@@ -1,0 +1,66 @@
+---
+// ChessBoard.astro — shows a single static chess position from a FEN,
+// no interaction, using @mliebelt/pgn-viewer's pgnBoard (GPL-3.0).
+//
+// Usage:
+//   import ChessBoard from '../components/ChessBoard.astro';
+//   <ChessBoard fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" />
+
+interface Props {
+  /** Position in FEN. Defaults to the standard starting position. */
+  fen?: string;
+  /** Board orientation. Defaults to white. */
+  orientation?: 'white' | 'black';
+  /** Board width in CSS units (e.g. "320px"). Optional. */
+  boardSize?: string;
+}
+
+const {
+  fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+  orientation = 'white',
+  boardSize,
+} = Astro.props;
+
+const id = `pgnb-${Math.random().toString(36).slice(2, 10)}`;
+---
+
+<div
+  id={id}
+  class="pgnv-static-board js-chess-board"
+  data-fen={fen}
+  data-orientation={orientation}
+  data-board-size={boardSize}
+>
+</div>
+
+<script>
+  import { pgnBoard } from '@mliebelt/pgn-viewer';
+
+  document.querySelectorAll<HTMLElement>('.js-chess-board').forEach((el) => {
+    if (el.dataset.initialised) return;
+    el.dataset.initialised = 'true';
+
+    const boardSize = el.dataset.boardSize;
+    pgnBoard(el.id, {
+      position: el.dataset.fen ?? 'start',
+      orientation: (el.dataset.orientation as 'white' | 'black') ?? 'white',
+      theme: 'blue',
+      pieceStyle: 'merida',
+      ...(boardSize ? { boardSize } : {}),
+	 coords: false,
+	 ...(boardSize ? { boardSize } : {}),
+    });
+  });
+</script>
+
+<style>
+	 .pgnv-static-board {
+		  margin: 1.5rem auto;
+	 }
+</style>
+
+<style is:global>
+  .pgnv-static-board coords {
+	 display: none !important;
+}
+</style>

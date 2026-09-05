@@ -1,48 +1,122 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const [latest, ...older] = posts;
 ---
 
 <!doctype html>
 <html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 720px;
+				max-width: calc(100% - 2em);
+			}
+			.latest {
+				margin-bottom: 3rem;
+			}
+			.latest .date {
+				margin: 0 0 0.5rem 0;
+				color: rgb(var(--gray));
+			}
+			.latest h2 {
+				margin: 0 0 0.75rem 0;
+				line-height: 1.1;
+			}
+			.latest h2 a {
+				text-decoration: none;
+				color: rgb(var(--black));
+			}
+			.latest h2 a:hover {
+				color: rgb(var(--accent));
+			}
+			.latest .excerpt {
+				margin: 0 0 1rem 0;
+				color: rgb(var(--gray-dark));
+			}
+			.read-more {
+				font-weight: bold;
+			}
+			.older h3 {
+				margin: 0 0 1rem 0;
+				padding-bottom: 0.5rem;
+				border-bottom: 1px solid rgb(var(--gray-light));
+				color: rgb(var(--gray));
+				font-size: 1rem;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+			.older ul {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.older li {
+				margin-bottom: 0.75rem;
+			}
+			.older li a {
+				text-decoration: none;
+				color: rgb(var(--black));
+			}
+			.older li a:hover {
+				color: rgb(var(--accent));
+			}
+			.older .list-date {
+				display: inline-block;
+				min-width: 8.5rem;
+				color: rgb(var(--gray));
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This template
-				serves as a lightweight, minimally-styled starting point for anyone looking to build a personal
-				website, blog, or portfolio with Astro.
-			</p>
-			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
-			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to
-				<a href="https://docs.astro.build/">read the docs</a>
-				or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out
-				<a href="https://github.com/Charca/astro-blog-template">astro-blog-template</a>
-				by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
+			{
+				latest && (
+					<section class="latest">
+						<p class="date">
+							<FormattedDate date={latest.data.pubDate} />
+						</p>
+						<h2>
+							<a href={`/blog/${latest.id}/`}>{latest.data.title}</a>
+						</h2>
+						<p class="excerpt">{latest.data.description}</p>
+						<a class="read-more" href={`/blog/${latest.id}/`}>
+							Read the full post &rarr;
+						</a>
+					</section>
+				)
+			}
+
+			{
+				older.length > 0 && (
+					<section class="older">
+						<h3>Earlier posts</h3>
+						<ul>
+							{older.map((post) => (
+								<li>
+									<a href={`/blog/${post.id}/`}>
+										<span class="list-date">
+											<FormattedDate date={post.data.pubDate} />
+										</span>
+										<span class="list-title">{post.data.title}</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				)
+			}
 		</main>
 		<Footer />
 	</body>

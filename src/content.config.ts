@@ -14,6 +14,12 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			// Chess-specific: my rating at the time of a post
+			// Optional so non-chess posts (or early posts) don't require it.
+			rating: z.number().int().positive().optional(),
+			ratingType: z
+				.enum(['uscf', 'fide', 'chesscom', 'lichess'])
+				.optional(),
 		}),
 });
 
