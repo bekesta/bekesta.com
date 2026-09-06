@@ -1,23 +1,8 @@
-# Astro Starter Kit: Blog
-
-```sh
-npm create astro@latest -- --template blog
-```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+# Bekesta's Chess Improvement Blog
 
 ## 🚀 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
+I created this site using Astro. The project has the following folders and files: 
 
 ```text
 ├── public/
@@ -54,9 +39,9 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 👀 Want to learn more about Astro?
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Check out [Astro's documentation](https://docs.astro.build) or jump into their [Discord server](https://astro.build/chat).
 
 ## Credit
 
