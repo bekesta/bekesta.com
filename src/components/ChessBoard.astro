@@ -13,25 +13,30 @@ interface Props {
   orientation?: 'white' | 'black';
   /** Board width in CSS units (e.g. "320px"). Optional. */
   boardSize?: string;
+  players?: string;
 }
 
 const {
   fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   orientation = 'white',
   boardSize,
+  players,
 } = Astro.props;
 
 const id = `pgnb-${Math.random().toString(36).slice(2, 10)}`;
 ---
 
-<div
-  id={id}
-  class="pgnv-static-board js-chess-board"
-  data-fen={fen}
-  data-orientation={orientation}
-  data-board-size={boardSize}
->
-</div>
+<figure class="pgnv-static-figure">
+	 <div
+	   id={id}
+	   class="pgnv-static-board js-chess-board"
+	   data-fen={fen}
+	   data-orientation={orientation}
+	   data-board-size={boardSize}
+	 >
+	 </div>
+	 {players && <figcaption class="pgnv-players">{players}</figcaption>}
+</figure>
 
 <script>
   import { pgnBoard } from '@mliebelt/pgn-viewer';
@@ -54,6 +59,15 @@ const id = `pgnb-${Math.random().toString(36).slice(2, 10)}`;
 </script>
 
 <style>
+	 .pgnv-static-figure {
+		  margin: 1.5rem 0;
+	 }	
+     .pgnv-players {
+	   margin-top: 0.5rem;
+	   text-align: center;
+       font-size: 0.9rem;
+       color: rgb(var(--gray));
+     }
 	 .pgnv-static-board {
 		  margin: 1.5rem auto;
 	 }
