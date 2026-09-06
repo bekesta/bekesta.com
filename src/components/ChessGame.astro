@@ -51,10 +51,11 @@ const id = `pgnv-${Math.random().toString(36).slice(2, 10)}`;
       pgn: el.dataset.pgn ?? '',
       orientation: (el.dataset.orientation as 'white' | 'black') ?? 'white',
       theme: 'blue',
-      layout: 'left',
+      layout: 'top',
       pieceStyle: 'merida',
       showResult: true,
-      notationLayout: 'list',
+      notationLayout: 'none',
+      showCoords: false,
       ...(boardSize ? { boardSize } : {}),
     });
   });
@@ -63,7 +64,9 @@ const id = `pgnv-${Math.random().toString(36).slice(2, 10)}`;
 <style>
   .chess-game {
     margin: 2rem 0;
+    text-align: center;
   }
+
   .chess-game figcaption {
     margin-top: 0.5rem;
     font-size: 0.9rem;
@@ -71,4 +74,27 @@ const id = `pgnv-${Math.random().toString(36).slice(2, 10)}`;
     text-align: center;
   }
   /* pgn-viewer namespaces its own rules under .pgnvjs, so no collisions. */
+</style>
+
+<style is:global>
+  .chess-game .moves {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .chess-game .moves move, 
+	 .chess-game .moves san,
+  .chess-game .moves move-number {
+    font-weight: normal;
+    font-size: 0.85rem;
+  }
+
+  .chess-game .moves .move.selected {
+    font-weight: 600 !important;
+   }
+  .chess-game .pgnvjs {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: fit-content;
+  }
 </style>

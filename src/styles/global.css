@@ -16,8 +16,31 @@
 		0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
 		0 16px 32px rgba(var(--gray), 33%);
 }
+
+@font-face {
+	font-family: 'EB Garamond';
+	src: url('/fonts/EBGaramond-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+	}
+@font-face {
+	font-family: 'EB Garamond';
+	src: url('/fonts/EBGaramond-Italic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}	
+@font-face {
+	font-family: 'EB Garamond';
+	src: url('/font/EBGaramond-Bold.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+	
 body {
-	font-family: var(--font-atkinson);
+	font-family: 'EB Garamond', Georgia, 'Times New Roman', serif; 
 	margin: 0;
 	padding: 0;
 	text-align: left;
@@ -27,7 +50,7 @@ body {
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
 	font-size: 20px;
-	line-height: 1.7;
+	line-height: 1.5;
 }
 main {
 	width: 720px;

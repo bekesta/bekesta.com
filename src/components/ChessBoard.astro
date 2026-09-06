@@ -52,7 +52,7 @@ const id = `pgnb-${Math.random().toString(36).slice(2, 10)}`;
       theme: 'blue',
       pieceStyle: 'merida',
       ...(boardSize ? { boardSize } : {}),
-	 coords: false,
+	 showCoords: false,
 	 ...(boardSize ? { boardSize } : {}),
     });
   });
@@ -73,8 +73,3 @@ const id = `pgnb-${Math.random().toString(36).slice(2, 10)}`;
 	 }
 </style>
 
-<style is:global>
-  .pgnv-static-board coords {
-	 display: none !important;
-}
-</style>
