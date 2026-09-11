@@ -16,23 +16,36 @@ interface Props {
   boardSize?: string;
   /** Optional caption shown under the board. */
   caption?: string;
+	layout?: 'left' | 'right' | 'top' | 'bottom';
+	notationLayout?: 'list' | 'inline' | 'none';
 }
 
-const { pgn, orientation = 'white', boardSize, caption } = Astro.props;
+const { 
+	pgn, 
+	orientation = 'white', 
+	boardSize, 
+	caption,
+	layout = 'left',
+	notationLayout = 'list',
+	} = Astro.props;
 
 // Unique id so several games can coexist on one page.
 const id = `pgnv-${Math.random().toString(36).slice(2, 10)}`;
 ---
 
 <figure class="chess-game">
-  <div
-    id={id}
-    class="pgnv-board js-chess-game"
-    data-pgn={pgn}
-    data-orientation={orientation}
-    data-board-size={boardSize}
-  ></div>
-  {caption && <figcaption>{caption}</figcaption>}
+	<div class="chess-game-inner">
+		{<figcaption>{caption}</figcaption>}
+		<div
+			id={id}
+			class="pgnv-board js-chess-game"
+			data-pgn={pgn}
+			data-orientation={orientation}
+			data-board-size={boardSize}
+			data-layout={layout}
+			data-notation-layout={notationLayout}
+		></div>
+	</div>
 </figure>
 
 {/* No define:vars here — that would make Astro treat the script as inline
@@ -50,12 +63,14 @@ const id = `pgnv-${Math.random().toString(36).slice(2, 10)}`;
     pgnView(el.id, {
       pgn: el.dataset.pgn ?? '',
       orientation: (el.dataset.orientation as 'white' | 'black') ?? 'white',
+			layout: (el.dataset.layout as 'left' | 'right' | 'top' | 'bottom') ?? 'left',
+			notationLayout: (el.dataset.notationLayout as 'list' | 'inline' | 'none') ?? 'list',
       theme: 'blue',
-      layout: 'top',
       pieceStyle: 'merida',
       showResult: true,
-      notationLayout: 'none',
       showCoords: false,
+			headers: false,
+			resizable: false,
       ...(boardSize ? { boardSize } : {}),
     });
   });
@@ -67,17 +82,31 @@ const id = `pgnv-${Math.random().toString(36).slice(2, 10)}`;
     text-align: center;
   }
 
+	.chess-game-inner {
+		width: fit-content;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
   .chess-game figcaption {
-    margin-top: 0.5rem;
     font-size: 0.9rem;
+		margin-bottom: 0;
     color: rgb(var(--gray, 96 115 159));
-    text-align: center;
+    text-align: left;
+		white-space: pre-line;
   }
+
+	.chess-game .pgnvjs.layout-left {
+		grid-template-rows: 0 auto minmax(auto, 1fr) 50px !important;
+		gap: 0.25em !important
+	}
   /* pgn-viewer namespaces its own rules under .pgnvjs, so no collisions. */
 </style>
 
 <style is:global>
   .chess-game .moves {
+		max-height: 350px;
+		overflow-y: auto;
     font-size: 0.85rem;
     line-height: 1.5;
   }
